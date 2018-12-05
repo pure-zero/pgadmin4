@@ -36,7 +36,7 @@ RUN LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 make -C /pgadmin4/docs/en_US -f Makefile
 FROM python:3.6-alpine3.7
 
 RUN pip --no-cache-dir install gunicorn
-RUN apk add --no-cache postgresql-client postgresql-libs
+RUN apk add --no-cache postgresql-client postgresql-libs postfix
 
 WORKDIR /pgadmin4
 ENV PYTHONPATH=/pgadmin4
@@ -45,7 +45,7 @@ ENV PYTHONPATH=/pgadmin4
 # so that deps do not increase the size of resulting image by remaining in layers
 COPY ./pgadmin4/requirements.txt /pgadmin4
 RUN set -ex && \
-    apk add --no-cache --virtual build-deps build-base postgresql-dev libffi-dev linux-headers postfix && \
+    apk add --no-cache --virtual build-deps build-base postgresql-dev libffi-dev linux-headers && \
     pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
     apk del --no-cache build-deps
